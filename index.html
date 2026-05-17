@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Marine Biology Notebook · For the love of cod</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       FOR THE LOVE OF COD — Design tokens (from Tideline Design System)
+       ============================================================ */
+    :root {
+      --abyss:     #001219;
+      --midnight:  #012a36;
+      --deep:      #005f73;
+      --tide:      #0a9396;
+      --foam:      #94d2bd;
+      --shore:     #e9d8a6;
+      --paper:     #f5ecd7;
+      --paper-2:   #fbf6e9;
+      --sun:       #ee9b00;
+      --rust:      #ca6702;
+      --coral:     #bb3e03;
+      --kelp:      #ae2012;
+      --blood:     #9b2226;
+      --ink:       #18222a;
+      --ink-2:     #3a4a55;
+      --ink-3:     #6b7a82;
+      --ink-4:     #9aa6ad;
+
+      --bg:        var(--abyss);
+      --bg-2:      var(--midnight);
+      --surface:   rgba(255,255,255,0.04);
+      --surface-2: rgba(255,255,255,0.08);
+      --fg-1:      var(--paper-2);
+      --fg-2:      var(--shore);
+      --fg-3:      #8aa4ae;
+      --fg-4:      #4d6770;
+      --accent:    var(--sun);
+      --link:      var(--foam);
+      --rule:      rgba(233,216,166,0.18);
+      --rule-2:    rgba(233,216,166,0.32);
+
+      --serif:  'Newsreader', Georgia, serif;
+      --sans:   'IBM Plex Sans', system-ui, sans-serif;
+      --mono:   'IBM Plex Mono', monospace;
+      --script: 'Caveat', cursive;
+
+      --s-1: 4px;  --s-2: 8px;   --s-3: 12px;
+      --s-4: 16px; --s-5: 24px;  --s-6: 32px;
+      --s-7: 48px; --s-8: 64px;  --s-9: 96px; --s-10: 128px;
+
+      --r-2: 4px; --r-3: 8px; --r-4: 14px; --r-pill: 999px;
+
+      --shadow-2: 0 4px 14px rgba(0,0,0,0.35);
+      --shadow-3: 0 18px 40px rgba(0,0,0,0.45);
+      --ease-tide: cubic-bezier(0.4,0.0,0.2,1);
+      --dur-1: 120ms; --dur-2: 220ms; --dur-4: 700ms;
+
+      --content-w: 1240px;
+      --gutter: clamp(20px, 4vw, 56px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    body {
+      font-family: var(--sans);
+      font-size: 1.0625rem;
+      line-height: 1.55;
+      color: var(--fg-1);
+      background: var(--abyss);
+      overflow-x: hidden;
+    }
+    /* Subtle film grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.035;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    ::selection { background: var(--sun); color: var(--abyss); }
+
+    .container {
+      max-width: var(--content-w);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+
+    /* Type utilities */
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+    }
+    .field-label {
+      font-family: var(--mono);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+    }
+
+    /* --- NAV --- */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      background: rgba(0,18,25,0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .nav-wordmark {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      cursor: default;
+    }
+    .nav-text-block { line-height: 1; }
+    .nav-title {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 500;
+      font-style: italic;
+      color: var(--fg-1);
+      display: block;
+    }
+    .nav-sub {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-4);
+      margin-top: 2px;
+      display: block;
+    }
+
+    /* --- HERO --- */
+    .hero {
+      position: relative;
+      margin-top: 60px;
+      height: 55vh;
+      min-height: 380px;
+      overflow: hidden;
+      background: var(--abyss);
+      display: flex;
+      align-items: flex-end;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center 45%;
+      animation: kenburns 28s ease-in-out infinite alternate;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,18,25,0.38) 0%, transparent 38%, rgba(0,18,25,0.94) 100%);
+    }
+    @keyframes kenburns {
+      from { transform: scale(1.0); }
+      to   { transform: scale(1.06); }
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding-bottom: var(--s-8);
+    }
+    .hero-annotation {
+      position: absolute;
+      right: var(--gutter);
+      bottom: 72px;
+      z-index: 1;
+      font-family: var(--script);
+      font-size: 1.7rem;
+      font-weight: 500;
+      line-height: 1.1;
+      color: var(--sun);
+      transform: rotate(-3.5deg);
+      opacity: 0.88;
+      pointer-events: none;
+      text-align: right;
+    }
+    @media (max-width: 720px) { .hero-annotation { display: none; } }
+
+    /* --- MAIN --- */
+    .main { padding: var(--s-8) 0 var(--s-10); }
+
+    /* --- FILTER BAR --- */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      margin-bottom: var(--s-7);
+      flex-wrap: wrap;
+    }
+
+    /* --- CARDS GRID --- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+    @media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .cards-grid { grid-template-columns: 1fr; } }
+
+    /* --- ENTRY CARD --- */
+    .entry-card {
+      background: var(--midnight);
+      border-radius: var(--r-3);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--dur-2) var(--ease-tide);
+      display: flex;
+      flex-direction: column;
+    }
+    .entry-card:hover { transform: translateY(-3px); }
+    .entry-card:hover .card-img-inner { transform: scale(1.05); }
+    .card-img-inner {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform var(--dur-4) var(--ease-tide);
+    }
+    .entry-card-header {
+      position: relative;
+      height: 150px;
+      overflow: hidden;
+    }
+    .entry-card-header-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 30%, rgba(0,18,25,0.65) 100%);
+    }
+    .entry-card-body {
+      padding: var(--s-5);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .entry-card-title {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 500;
+      line-height: 1.2;
+      color: var(--fg-1);
+      margin-bottom: var(--s-2);
+      letter-spacing: -0.01em;
+    }
+    .entry-card-text {
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--fg-3);
+      flex: 1;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+    .entry-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--s-4);
+      padding-top: var(--s-4);
+      border-top: 1px solid var(--rule);
+    }
+
+    /* --- PILLS --- */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: var(--r-pill);
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .pill-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+    /* --- BUTTONS --- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 1;
+      padding: 14px 22px;
+      border-radius: var(--r-3);
+      border: 0;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--dur-1) var(--ease-tide);
+    }
+    .btn-primary { background: var(--sun); color: var(--abyss); }
+    .btn-primary:hover { background: #ffb030; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--fg-1);
+      box-shadow: inset 0 0 0 1px var(--rule-2);
+    }
+    .btn-secondary:hover { box-shadow: inset 0 0 0 1px var(--shore); }
+    .btn-filter {
+      background: var(--surface);
+      color: var(--fg-2);
+      padding: 7px 14px;
+      border-radius: var(--r-pill);
+      font-size: 13px;
+    }
+    .btn-filter:hover { background: var(--surface-2); color: var(--fg-1); }
+    .btn-filter.active { background: var(--surface-2); color: var(--fg-1); box-shadow: inset 0 0 0 1px var(--rule-2); }
+
+    /* --- MODAL SCRIM --- */
+    .modal-scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,18,25,0.88);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--s-5);
+      backdrop-filter: blur(4px);
+    }
+    .modal {
+      background: var(--midnight);
+      border-radius: var(--r-4);
+      padding: var(--s-7);
+      width: 100%;
+      max-width: 560px;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-3);
+      border: 1px solid var(--rule);
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--fg-3);
+      font-size: 22px;
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: var(--r-2);
+      transition: color var(--dur-1);
+      flex-shrink: 0;
+    }
+    .modal-close:hover { color: var(--fg-1); }
+
+    /* --- FORM --- */
+    .form-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      display: block;
+      margin-bottom: var(--s-2);
+    }
+    .form-input, .form-textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-3);
+      color: var(--fg-1);
+      font-family: var(--sans);
+      font-size: 1rem;
+      padding: 12px 14px;
+      transition: border-color var(--dur-1) var(--ease-tide), background var(--dur-1) var(--ease-tide);
+      outline: none;
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--fg-4); }
+    .form-input:focus { border-color: var(--tide); background: rgba(10,147,150,0.07); }
+    .form-textarea:focus { border-color: var(--tide); background: rgba(10,147,150,0.07); }
+    .form-textarea { resize: vertical; min-height: 130px; line-height: 1.65; }
+    .form-group { margin-bottom: var(--s-5); }
+
+    /* Category selector */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-3);
+    }
+    .cat-btn {
+      padding: 13px 15px;
+      border: 1px solid var(--rule);
+      border-radius: var(--r-3);
+      background: var(--surface);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color var(--dur-1) var(--ease-tide), background var(--dur-1) var(--ease-tide);
+    }
+    .cat-btn:hover { background: var(--surface-2); border-color: var(--rule-2); }
+    .cat-btn.selected { background: var(--surface-2); }
+    .cat-btn-name {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 3px;
+    }
+    .cat-btn-hint {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-4);
+      display: block;
+    }
+
+    /* --- EMPTY STATE --- */
+    .empty-state {
+      text-align: center;
+      padding: 80px 0 100px;
+    }
+
+    /* --- FOOTER --- */
+    .footer {
+      border-top: 1px solid var(--rule);
+      padding: var(--s-6) var(--gutter);
+      text-align: center;
+    }
+
+    /* --- DETAIL BODY --- */
+    .detail-body {
+      font-size: 1.0625rem;
+      line-height: 1.72;
+      color: var(--fg-2);
+      white-space: pre-wrap;
+      font-family: var(--sans);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // ---- Categories -------------------------------------------------------
+    const CATS = {
+      animal: {
+        label: 'Animal',
+        hint: 'a creature you\'ve discovered',
+        color: '#94d2bd',
+        img: 'https://images.unsplash.com/photo-1545671913-b89ac1b4ac10?w=900&q=80',
+        placeholder: 'e.g. Blue-ringed octopus',
+        notesHint: 'Where does it live? What does it eat? What surprised you?',
+      },
+      fact: {
+        label: 'Cool fact',
+        hint: 'something that blew your mind',
+        color: '#0a9396',
+        img: 'https://images.unsplash.com/photo-1568430462989-44163eb1752f?w=900&q=80',
+        placeholder: 'e.g. Seahorse dads carry the babies',
+        notesHint: 'What makes this fact so amazing? Where did you find out?',
+      },
+      question: {
+        label: 'Question',
+        hint: 'something you want to find out',
+        color: '#ee9b00',
+        img: 'https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=900&q=80',
+        placeholder: 'e.g. Why do fish sleep with their eyes open?',
+        notesHint: 'What made you wonder about this? Any ideas for an answer?',
+      },
+      idea: {
+        label: 'Idea',
+        hint: 'something you want to do or make',
+        color: '#e9d8a6',
+        img: 'https://images.unsplash.com/photo-1501950183564-3c8bc1e9ade4?w=900&q=80',
+        placeholder: 'e.g. Draw a diagram of a shark\'s anatomy',
+        notesHint: 'What\'s your plan? What would you need?',
+      },
+    };
+
+    const STORAGE_KEY = 'ftloc-notebook-v1';
+
+    function loadEntries() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+      catch { return []; }
+    }
+
+    // ---- Fishbone brand mark ----------------------------------------------
+    function FishboneMark({ size = 28 }) {
+      const scale = size / 20;
+      return (
+        <svg
+          width={Math.round(32 * scale)}
+          height={Math.round(20 * scale)}
+          viewBox="0 0 32 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          {/* Tail */}
+          <path d="M 3 5 L 8 10 L 3 15" stroke="#8aa4ae" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+          {/* Body */}
+          <line x1="8" y1="10" x2="27" y2="10" stroke="#8aa4ae" strokeWidth="1.6" strokeLinecap="round"/>
+          {/* Spines */}
+          <line x1="12" y1="6.5" x2="12" y2="13.5" stroke="#8aa4ae" strokeWidth="1.3" strokeLinecap="round"/>
+          <line x1="16" y1="6.5" x2="16" y2="13.5" stroke="#8aa4ae" strokeWidth="1.3" strokeLinecap="round"/>
+          <line x1="20" y1="6.5" x2="20" y2="13.5" stroke="#8aa4ae" strokeWidth="1.3" strokeLinecap="round"/>
+          <line x1="24" y1="6.5" x2="24" y2="13.5" stroke="#8aa4ae" strokeWidth="1.3" strokeLinecap="round"/>
+          {/* Eye */}
+          <circle cx="27" cy="10" r="2.6" fill="#ee9b00"/>
+        </svg>
+      );
+    }
+
+    // ---- Category pill ----------------------------------------------------
+    function CategoryPill({ catKey }) {
+      const cat = CATS[catKey];
+      if (!cat) return null;
+      return (
+        <span className="pill" style={{ background: `${cat.color}22`, color: cat.color }}>
+          <span className="pill-dot" style={{ background: cat.color }}></span>
+          {cat.label}
+        </span>
+      );
+    }
+
+    // ---- Nav --------------------------------------------------------------
+    function Nav({ onAdd }) {
+      return (
+        <nav className="nav">
+          <div className="container nav-inner">
+            <div className="nav-wordmark">
+              <FishboneMark size={22} />
+              <div className="nav-text-block">
+                <span className="nav-title">For the love of cod</span>
+                <span className="nav-sub">Marine biology notebook</span>
+              </div>
+            </div>
+            <button
+              className="btn btn-primary"
+              style={{ padding: '9px 16px', fontSize: 13 }}
+              onClick={onAdd}
+            >
+              + New entry
+            </button>
+          </div>
+        </nav>
+      );
+    }
+
+    // ---- Hero -------------------------------------------------------------
+    function Hero({ count, onAdd }) {
+      const plural = count === 1 ? 'entry' : 'entries';
+      return (
+        <section className="hero">
+          <div
+            className="hero-bg"
+            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=2000&q=80)' }}
+          ></div>
+          <div className="hero-overlay"></div>
+
+          <div className="hero-content container">
+            <div className="eyebrow" style={{ color: 'var(--sun)', marginBottom: 16 }}>
+              Field notebook · Marine biology
+            </div>
+            <h1 style={{
+              fontFamily: 'var(--serif)',
+              fontSize: 'clamp(2rem, 4.8vw, 3.8rem)',
+              fontWeight: 500,
+              fontStyle: 'italic',
+              lineHeight: 1.02,
+              letterSpacing: '-0.018em',
+              color: 'var(--fg-1)',
+              margin: '0 0 22px',
+              maxWidth: '20ch',
+            }}>
+              My marine biology notebook.
+            </h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+              <button className="btn btn-primary" onClick={onAdd}>
+                Add an idea →
+              </button>
+              <span style={{
+                fontFamily: 'var(--mono)',
+                fontSize: 11,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: 'var(--fg-4)',
+              }}>
+                {count === 0 ? 'No entries yet — start here' : `${count} ${plural} recorded`}
+              </span>
+            </div>
+          </div>
+
+          <div className="hero-annotation">
+            the ocean is full<br/>of wonders
+          </div>
+        </section>
+      );
+    }
+
+    // ---- Entry card -------------------------------------------------------
+    function EntryCard({ entry, onClick }) {
+      const cat = CATS[entry.category];
+      const dateStr = new Date(entry.date).toLocaleDateString('en-GB', {
+        day: 'numeric', month: 'short',
+      });
+      return (
+        <div className="entry-card" onClick={onClick}>
+          <div className="entry-card-header">
+            <div
+              className="card-img-inner"
+              style={{ backgroundImage: `url(${cat.img})` }}
+            ></div>
+            <div className="entry-card-header-overlay"></div>
+            <div style={{ position: 'absolute', top: 12, left: 12 }}>
+              <CategoryPill catKey={entry.category} />
+            </div>
+          </div>
+          <div className="entry-card-body">
+            <div className="entry-card-title">{entry.title}</div>
+            {entry.body && (
+              <div className="entry-card-text">{entry.body}</div>
+            )}
+            <div className="entry-card-footer">
+              <span className="field-label">{dateStr}</span>
+              <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--fg-4)' }}>Read →</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ---- Entry detail modal -----------------------------------------------
+    function EntryDetail({ entry, onClose, onDelete }) {
+      const cat = CATS[entry.category];
+      const dateStr = new Date(entry.date).toLocaleDateString('en-GB', {
+        day: 'numeric', month: 'long', year: 'numeric',
+      });
+
+      function handleScrimClick(e) {
+        if (e.target === e.currentTarget) onClose();
+      }
+
+      return (
+        <div className="modal-scrim" onClick={handleScrimClick}>
+          <div className="modal" style={{ maxWidth: 640 }}>
+            <div style={{ marginBottom: 20 }}>
+              <CategoryPill catKey={entry.category} />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 22 }}>
+              <h2 style={{
+                fontFamily: 'var(--serif)',
+                fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                fontWeight: 500,
+                fontStyle: 'italic',
+                lineHeight: 1.1,
+                color: 'var(--fg-1)',
+                margin: 0,
+              }}>
+                {entry.title}
+              </h2>
+              <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
+            </div>
+
+            {entry.body ? (
+              <p className="detail-body" style={{ marginBottom: 28 }}>{entry.body}</p>
+            ) : (
+              <p style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--fg-4)', marginBottom: 28 }}>
+                No notes added yet.
+              </p>
+            )}
+
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingTop: 20,
+              borderTop: '1px solid var(--rule)',
+            }}>
+              <span className="field-label">{dateStr}</span>
+              <button
+                className="btn"
+                style={{ background: 'rgba(174,32,18,0.14)', color: 'var(--kelp)', fontSize: 13, padding: '8px 14px' }}
+                onClick={() => { onDelete(entry.id); onClose(); }}
+              >
+                Delete entry
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ---- Entry form modal -------------------------------------------------
+    function EntryForm({ onSave, onClose }) {
+      const [category, setCategory] = useState('animal');
+      const [title, setTitle] = useState('');
+      const [body, setBody] = useState('');
+      const titleRef = useRef(null);
+
+      useEffect(() => {
+        // Small delay so the modal animation settles first
+        const t = setTimeout(() => titleRef.current?.focus(), 60);
+        return () => clearTimeout(t);
+      }, []);
+
+      function handleSubmit(e) {
+        e.preventDefault();
+        if (!title.trim()) return;
+        onSave({
+          id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          category,
+          title: title.trim(),
+          body: body.trim(),
+          date: new Date().toISOString(),
+        });
+      }
+
+      function handleScrimClick(e) {
+        if (e.target === e.currentTarget) onClose();
+      }
+
+      const cat = CATS[category];
+
+      return (
+        <div className="modal-scrim" onClick={handleScrimClick}>
+          <div className="modal">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 26 }}>
+              <h2 style={{
+                fontFamily: 'var(--serif)',
+                fontSize: 26,
+                fontWeight: 500,
+                fontStyle: 'italic',
+                color: 'var(--fg-1)',
+                margin: 0,
+              }}>
+                New entry
+              </h2>
+              <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              {/* Category selector */}
+              <div className="form-group">
+                <label className="form-label">What kind of entry?</label>
+                <div className="cat-grid">
+                  {Object.entries(CATS).map(([key, c]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      className={`cat-btn ${category === key ? 'selected' : ''}`}
+                      style={category === key ? { borderColor: c.color } : {}}
+                      onClick={() => setCategory(key)}
+                    >
+                      <span className="cat-btn-name" style={{ color: category === key ? c.color : 'var(--fg-1)' }}>
+                        {c.label}
+                      </span>
+                      <span className="cat-btn-hint">{c.hint}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Title */}
+              <div className="form-group">
+                <label className="form-label" htmlFor="entry-title">Title</label>
+                <input
+                  ref={titleRef}
+                  id="entry-title"
+                  className="form-input"
+                  type="text"
+                  placeholder={cat.placeholder}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+
+              {/* Notes */}
+              <div className="form-group">
+                <label className="form-label" htmlFor="entry-body">Notes <span style={{ color: 'var(--fg-4)', textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
+                <textarea
+                  id="entry-body"
+                  className="form-textarea"
+                  placeholder={cat.notesHint}
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                ></textarea>
+              </div>
+
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  style={{ fontSize: 14, padding: '10px 18px' }}
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ fontSize: 14, padding: '10px 20px' }}
+                  disabled={!title.trim()}
+                >
+                  Save entry
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    // ---- Empty state -------------------------------------------------------
+    function EmptyState({ onAdd }) {
+      return (
+        <div className="empty-state">
+          <FishboneMark size={52} />
+          <h2 style={{
+            fontFamily: 'var(--serif)',
+            fontStyle: 'italic',
+            fontSize: 30,
+            fontWeight: 400,
+            color: 'var(--fg-2)',
+            margin: '28px 0 14px',
+          }}>
+            Your notebook is waiting.
+          </h2>
+          <p style={{
+            color: 'var(--fg-3)',
+            fontSize: 16,
+            lineHeight: 1.6,
+            maxWidth: '44ch',
+            margin: '0 auto 32px',
+          }}>
+            Record an animal you've read about, a cool fact that surprised you, a question you want answered, or an idea you want to try.
+          </p>
+          <button className="btn btn-primary" onClick={onAdd}>
+            Add your first entry →
+          </button>
+        </div>
+      );
+    }
+
+    // ---- App --------------------------------------------------------------
+    function App() {
+      const [entries, setEntries] = useState(loadEntries);
+      const [formOpen, setFormOpen] = useState(false);
+      const [selectedId, setSelectedId] = useState(null);
+      const [filterCat, setFilterCat] = useState(null);
+
+      useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      }, [entries]);
+
+      function handleSave(entry) {
+        setEntries(prev => [entry, ...prev]);
+        setFormOpen(false);
+      }
+
+      function handleDelete(id) {
+        setEntries(prev => prev.filter(e => e.id !== id));
+      }
+
+      const filtered = filterCat
+        ? entries.filter(e => e.category === filterCat)
+        : entries;
+
+      const selected = entries.find(e => e.id === selectedId) || null;
+
+      // Which categories actually have entries (for filter bar)
+      const usedCats = Object.keys(CATS).filter(k => entries.some(e => e.category === k));
+
+      return (
+        <React.Fragment>
+          <Nav onAdd={() => setFormOpen(true)} />
+          <Hero count={entries.length} onAdd={() => setFormOpen(true)} />
+
+          <main className="main">
+            <div className="container">
+
+              {/* Filter bar — only shown when there are entries */}
+              {entries.length > 0 && (
+                <div className="filter-bar">
+                  <span className="field-label" style={{ marginRight: 4 }}>Show</span>
+                  <button
+                    className={`btn btn-filter ${!filterCat ? 'active' : ''}`}
+                    onClick={() => setFilterCat(null)}
+                  >
+                    All ({entries.length})
+                  </button>
+                  {usedCats.map(key => {
+                    const cat = CATS[key];
+                    const n = entries.filter(e => e.category === key).length;
+                    return (
+                      <button
+                        key={key}
+                        className={`btn btn-filter ${filterCat === key ? 'active' : ''}`}
+                        style={filterCat === key ? { boxShadow: `inset 0 0 0 1px ${cat.color}`, color: cat.color } : {}}
+                        onClick={() => setFilterCat(filterCat === key ? null : key)}
+                      >
+                        {cat.label} ({n})
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Empty state */}
+              {entries.length === 0 && <EmptyState onAdd={() => setFormOpen(true)} />}
+
+              {/* No results for filter */}
+              {entries.length > 0 && filtered.length === 0 && (
+                <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: 'var(--serif)', fontSize: 20, fontStyle: 'italic', color: 'var(--fg-3)' }}>
+                  Nothing in this category yet.
+                </div>
+              )}
+
+              {/* Cards */}
+              {filtered.length > 0 && (
+                <div className="cards-grid">
+                  {filtered.map(entry => (
+                    <EntryCard
+                      key={entry.id}
+                      entry={entry}
+                      onClick={() => setSelectedId(entry.id)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </main>
+
+          <footer className="footer">
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12 }}>
+              <FishboneMark size={18} />
+              <span style={{ fontFamily: 'var(--serif)', fontSize: 14, fontStyle: 'italic', color: 'var(--fg-4)' }}>
+                For the love of cod · marine biology notebook
+              </span>
+            </div>
+          </footer>
+
+          {formOpen && (
+            <EntryForm
+              onSave={handleSave}
+              onClose={() => setFormOpen(false)}
+            />
+          )}
+          {selected && (
+            <EntryDetail
+              entry={selected}
+              onClose={() => setSelectedId(null)}
+              onDelete={handleDelete}
+            />
+          )}
+        </React.Fragment>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
