@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
+  <defs>
+    
+  </defs>
+  <rect width="80" height="80" rx="2" fill="#001219"></rect>
+  <text x="40" y="50" class="mark" fill="#fbf6e9" text-anchor="middle">cod</text>
+  
+  <g stroke="#fbf6e9" stroke-width="1.4" stroke-linecap="round" fill="none">
+    <path d="M 12 56 L 19 62 L 12 68" stroke-linejoin="round"></path>
+    <line x1="17" y1="62" x2="56" y2="62"></line>
+    <line x1="26" y1="58" x2="26" y2="66"></line>
+    <line x1="36" y1="58" x2="36" y2="66"></line>
+    <line x1="46" y1="58" x2="46" y2="66"></line>
+  </g>
+  <circle cx="62" cy="62" r="4" fill="#ee9b00"></circle>
+</svg>

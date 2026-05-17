@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Marine Biology Notebook · For the love of cod</title>
+  <meta name="description" content="A marine biology field notebook — recording discoveries, questions and ideas about the ocean.">
+  <meta name="theme-color" content="#001219">
+  <meta property="og:title" content="My Marine Biology Notebook">
+  <meta property="og:description" content="For the love of cod — field notes on ocean life.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Notebook">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -390,7 +401,7 @@
     }
 
     // ---- Nav ------------------------------------------------------------
-    function Nav({ onAdd }) {
+    function Nav({ user, onAdd, onLogin, onLogout }) {
       return (
         <nav className="nav">
           <div className="container nav-inner">
@@ -401,11 +412,115 @@
                 <span className="nav-sub">Marine biology notebook</span>
               </div>
             </div>
-            <button className="btn btn-primary" style={{ padding: '9px 16px', fontSize: 13 }} onClick={onAdd}>
-              + New entry
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              {user ? (
+                <React.Fragment>
+                  <button className="btn btn-primary" style={{ padding: '9px 16px', fontSize: 13 }} onClick={onAdd}>
+                    + New entry
+                  </button>
+                  <button
+                    className="btn"
+                    style={{ padding: '9px 14px', fontSize: 12, background: 'transparent', color: 'var(--fg-4)', boxShadow: 'none' }}
+                    onClick={onLogout}
+                  >
+                    Log out
+                  </button>
+                </React.Fragment>
+              ) : (
+                <button className="btn btn-secondary" style={{ padding: '9px 16px', fontSize: 13 }} onClick={onLogin}>
+                  Log in
+                </button>
+              )}
+            </div>
           </div>
         </nav>
+      );
+    }
+
+    // ---- Login form -----------------------------------------------------
+    function LoginForm({ onSuccess, onClose }) {
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [error, setError] = useState('');
+      const [loading, setLoading] = useState(false);
+      const emailRef = useRef(null);
+
+      useEffect(() => {
+        const t = setTimeout(() => emailRef.current?.focus(), 60);
+        return () => clearTimeout(t);
+      }, []);
+
+      async function handleSubmit(e) {
+        e.preventDefault();
+        if (loading) return;
+        setLoading(true);
+        setError('');
+        const { error: authError } = await db.auth.signInWithPassword({ email, password });
+        if (authError) {
+          setError('Incorrect email or password.');
+          setLoading(false);
+        } else {
+          onSuccess();
+        }
+      }
+
+      return (
+        <div className="modal-scrim" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+          <div className="modal" style={{ maxWidth: 420 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
+              <div>
+                <FishboneMark size={24} />
+                <h2 style={{ fontFamily: 'var(--serif)', fontSize: 24, fontWeight: 500, fontStyle: 'italic', color: 'var(--fg-1)', margin: '12px 0 4px' }}>
+                  Sign in to your notebook
+                </h2>
+                <p style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-4)', margin: 0 }}>
+                  For the love of cod
+                </p>
+              </div>
+              <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label className="form-label" htmlFor="login-email">Email</label>
+                <input
+                  ref={emailRef}
+                  id="login-email"
+                  className="form-input"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="login-password">Password</label>
+                <input
+                  id="login-password"
+                  className="form-input"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                />
+              </div>
+
+              {error && (
+                <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--kelp)', background: 'rgba(174,32,18,0.1)', padding: '10px 14px', borderRadius: 'var(--r-3)', marginBottom: 'var(--s-4)' }}>
+                  {error}
+                </div>
+              )}
+
+              <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px' }} disabled={loading}>
+                {loading ? 'Signing in…' : 'Sign in'}
+              </button>
+            </form>
+          </div>
+        </div>
       );
     }
 
@@ -585,7 +700,7 @@
     }
 
     // ---- Entry detail modal --------------------------------------------
-    function EntryDetail({ entry, onClose, onDelete, onEdit }) {
+    function EntryDetail({ entry, onClose, onDelete, onEdit, user }) {
       const dateStr = new Date(entry.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
       const [deleting, setDeleting] = useState(false);
 
@@ -620,23 +735,25 @@
 
             <div className="detail-actions">
               <span className="field-label">{dateStr}</span>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button
-                  className="btn btn-secondary"
-                  style={{ fontSize: 13, padding: '12px 16px' }}
-                  onClick={() => { onClose(); onEdit(entry); }}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn"
-                  style={{ background: 'rgba(174,32,18,0.14)', color: 'var(--kelp)', fontSize: 13, padding: '12px 16px' }}
-                  onClick={handleDelete}
-                  disabled={deleting}
-                >
-                  {deleting ? 'Deleting…' : 'Delete'}
-                </button>
-              </div>
+              {user && (
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    className="btn btn-secondary"
+                    style={{ fontSize: 13, padding: '12px 16px' }}
+                    onClick={() => { onClose(); onEdit(entry); }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn"
+                    style={{ background: 'rgba(174,32,18,0.14)', color: 'var(--kelp)', fontSize: 13, padding: '12px 16px' }}
+                    onClick={handleDelete}
+                    disabled={deleting}
+                  >
+                    {deleting ? 'Deleting…' : 'Delete'}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -661,9 +778,11 @@
 
     // ---- App ------------------------------------------------------------
     function App() {
+      const [user, setUser] = useState(null);
       const [entries, setEntries] = useState([]);
       const [loading, setLoading] = useState(true);
       const [formOpen, setFormOpen] = useState(false);
+      const [loginOpen, setLoginOpen] = useState(false);
       const [editingEntry, setEditingEntry] = useState(null);
       const [selectedId, setSelectedId] = useState(null);
       const [filterCat, setFilterCat] = useState(null);
@@ -673,24 +792,32 @@
       }
 
       useEffect(() => {
-        refresh();
+        // Auth state
+        db.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
+        const { data: { subscription } } = db.auth.onAuthStateChange((_event, session) => {
+          setUser(session?.user ?? null);
+        });
 
-        // Real-time: re-fetch on any change from any device
+        // Entries
+        refresh();
         const channel = db.channel('entries-rt')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'entries' }, () => {
             fetchEntries().then(setEntries);
           })
           .subscribe();
-
-        // Re-fetch when tab comes back into view (handles tablet backgrounding)
         const onVisibility = () => { if (!document.hidden) fetchEntries().then(setEntries); };
         document.addEventListener('visibilitychange', onVisibility);
 
         return () => {
+          subscription.unsubscribe();
           db.removeChannel(channel);
           document.removeEventListener('visibilitychange', onVisibility);
         };
       }, []);
+
+      function requestAdd() {
+        if (user) { setFormOpen(true); } else { setLoginOpen(true); }
+      }
 
       async function handleSave(payload) {
         const { data, error } = await db.from('entries').insert([payload]).select().single();
@@ -716,8 +843,13 @@
 
       return (
         <React.Fragment>
-          <Nav onAdd={() => setFormOpen(true)} />
-          <Hero count={entries.length} loading={loading} onAdd={() => setFormOpen(true)} />
+          <Nav
+            user={user}
+            onAdd={requestAdd}
+            onLogin={() => setLoginOpen(true)}
+            onLogout={() => db.auth.signOut()}
+          />
+          <Hero count={entries.length} loading={loading} onAdd={requestAdd} />
 
           <main className="main">
             <div className="container">
@@ -746,7 +878,7 @@
               )}
 
               {loading && <div className="loading-state">Loading notebook…</div>}
-              {!loading && entries.length === 0 && <EmptyState onAdd={() => setFormOpen(true)} />}
+              {!loading && entries.length === 0 && <EmptyState onAdd={requestAdd} />}
               {!loading && entries.length > 0 && filtered.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: 'var(--serif)', fontSize: 20, fontStyle: 'italic', color: 'var(--fg-3)' }}>
                   Nothing in this category yet.
@@ -772,6 +904,12 @@
             </div>
           </footer>
 
+          {loginOpen && (
+            <LoginForm
+              onSuccess={() => { setLoginOpen(false); setFormOpen(true); }}
+              onClose={() => setLoginOpen(false)}
+            />
+          )}
           {formOpen && <EntryForm onSave={handleSave} onClose={() => setFormOpen(false)} />}
           {editingEntry && <EntryForm initialEntry={editingEntry} onSave={handleEdit} onClose={() => setEditingEntry(null)} />}
           {selected && (
@@ -780,6 +918,7 @@
               onClose={() => setSelectedId(null)}
               onDelete={handleDelete}
               onEdit={(entry) => { setSelectedId(null); setEditingEntry(entry); }}
+              user={user}
             />
           )}
         </React.Fragment>

@@ -1,0 +1,17 @@
+{
+  "name": "My Marine Biology Notebook",
+  "short_name": "Notebook",
+  "description": "For the love of cod — field notes on ocean life.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#001219",
+  "theme_color": "#001219",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
