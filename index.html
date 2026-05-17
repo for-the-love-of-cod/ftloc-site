@@ -73,7 +73,6 @@
       background: var(--abyss);
       overflow-x: hidden;
     }
-    /* Subtle film grain */
     body::after {
       content: '';
       position: fixed;
@@ -86,13 +85,8 @@
     }
     ::selection { background: var(--sun); color: var(--abyss); }
 
-    .container {
-      max-width: var(--content-w);
-      margin: 0 auto;
-      padding: 0 var(--gutter);
-    }
+    .container { max-width: var(--content-w); margin: 0 auto; padding: 0 var(--gutter); }
 
-    /* Type utilities */
     .eyebrow {
       font-family: var(--mono);
       font-size: 0.75rem;
@@ -123,37 +117,11 @@
       -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--rule);
     }
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-    }
-    .nav-wordmark {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      text-decoration: none;
-      cursor: default;
-    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+    .nav-wordmark { display: flex; align-items: center; gap: 11px; cursor: default; }
     .nav-text-block { line-height: 1; }
-    .nav-title {
-      font-family: var(--serif);
-      font-size: 1.05rem;
-      font-weight: 500;
-      font-style: italic;
-      color: var(--fg-1);
-      display: block;
-    }
-    .nav-sub {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--fg-4);
-      margin-top: 2px;
-      display: block;
-    }
+    .nav-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 500; font-style: italic; color: var(--fg-1); display: block; }
+    .nav-sub { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-4); margin-top: 2px; display: block; }
 
     /* --- HERO --- */
     .hero {
@@ -166,27 +134,10 @@
       display: flex;
       align-items: flex-end;
     }
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center 45%;
-      animation: kenburns 28s ease-in-out infinite alternate;
-    }
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(0,18,25,0.38) 0%, transparent 38%, rgba(0,18,25,0.94) 100%);
-    }
-    @keyframes kenburns {
-      from { transform: scale(1.0); }
-      to   { transform: scale(1.06); }
-    }
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      padding-bottom: var(--s-8);
-    }
+    .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center 45%; animation: kenburns 28s ease-in-out infinite alternate; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,18,25,0.38) 0%, transparent 38%, rgba(0,18,25,0.94) 100%); }
+    @keyframes kenburns { from { transform: scale(1.0); } to { transform: scale(1.06); } }
+    .hero-content { position: relative; z-index: 1; padding-bottom: var(--s-8); }
     .hero-annotation {
       position: absolute;
       right: var(--gutter);
@@ -208,20 +159,10 @@
     .main { padding: var(--s-8) 0 var(--s-10); }
 
     /* --- FILTER BAR --- */
-    .filter-bar {
-      display: flex;
-      align-items: center;
-      gap: var(--s-3);
-      margin-bottom: var(--s-7);
-      flex-wrap: wrap;
-    }
+    .filter-bar { display: flex; align-items: center; gap: var(--s-3); margin-bottom: var(--s-7); flex-wrap: wrap; }
 
     /* --- CARDS GRID --- */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-    }
+    .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
     @media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 560px) { .cards-grid { grid-template-columns: 1fr; } }
 
@@ -237,70 +178,31 @@
     }
     .entry-card:hover { transform: translateY(-3px); }
     .entry-card:hover .card-img-inner { transform: scale(1.05); }
-    .card-img-inner {
+    .card-img-inner { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform var(--dur-4) var(--ease-tide); }
+    .entry-card-header { position: relative; height: 150px; overflow: hidden; }
+    .entry-card-header-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(0,18,25,0.65) 100%); }
+    .entry-card-body { padding: var(--s-5); flex: 1; display: flex; flex-direction: column; }
+    .entry-card-title { font-family: var(--serif); font-size: 1.2rem; font-weight: 500; line-height: 1.2; color: var(--fg-1); margin-bottom: var(--s-2); letter-spacing: -0.01em; }
+    .entry-card-text { font-size: 0.875rem; line-height: 1.6; color: var(--fg-3); flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+    .entry-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: var(--s-4); padding-top: var(--s-4); border-top: 1px solid var(--rule); }
+    @media (max-width: 560px) { .entry-card-footer { flex-wrap: wrap; gap: var(--s-2); } }
+
+    /* Curated badge */
+    .curated-badge {
       position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      transition: transform var(--dur-4) var(--ease-tide);
-    }
-    .entry-card-header {
-      position: relative;
-      height: 150px;
-      overflow: hidden;
-    }
-    .entry-card-header-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, transparent 30%, rgba(0,18,25,0.65) 100%);
-    }
-    .entry-card-body {
-      padding: var(--s-5);
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .entry-card-title {
-      font-family: var(--serif);
-      font-size: 1.2rem;
+      bottom: 10px;
+      right: 12px;
+      font-family: var(--script);
+      font-size: 1rem;
       font-weight: 500;
-      line-height: 1.2;
-      color: var(--fg-1);
-      margin-bottom: var(--s-2);
-      letter-spacing: -0.01em;
-    }
-    .entry-card-text {
-      font-size: 0.875rem;
-      line-height: 1.6;
-      color: var(--fg-3);
-      flex: 1;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-    }
-    .entry-card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: var(--s-4);
-      padding-top: var(--s-4);
-      border-top: 1px solid var(--rule);
+      color: var(--sun);
+      transform: rotate(-2deg);
+      line-height: 1;
+      pointer-events: none;
     }
 
     /* --- PILLS --- */
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 3px 9px;
-      border-radius: var(--r-pill);
-      font-family: var(--mono);
-      font-size: 9.5px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-weight: 500;
-    }
+    .pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: var(--r-pill); font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; }
     .pill-dot { width: 5px; height: 5px; border-radius: 50%; }
 
     /* --- BUTTONS --- */
@@ -322,23 +224,13 @@
     .btn-primary { background: var(--sun); color: var(--abyss); }
     .btn-primary:hover { background: #ffb030; }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-secondary {
-      background: transparent;
-      color: var(--fg-1);
-      box-shadow: inset 0 0 0 1px var(--rule-2);
-    }
+    .btn-secondary { background: transparent; color: var(--fg-1); box-shadow: inset 0 0 0 1px var(--rule-2); }
     .btn-secondary:hover { box-shadow: inset 0 0 0 1px var(--shore); }
-    .btn-filter {
-      background: var(--surface);
-      color: var(--fg-2);
-      padding: 7px 14px;
-      border-radius: var(--r-pill);
-      font-size: 13px;
-    }
+    .btn-filter { background: var(--surface); color: var(--fg-2); padding: 10px 16px; border-radius: var(--r-pill); font-size: 13px; }
     .btn-filter:hover { background: var(--surface-2); color: var(--fg-1); }
     .btn-filter.active { background: var(--surface-2); color: var(--fg-1); box-shadow: inset 0 0 0 1px var(--rule-2); }
 
-    /* --- MODAL SCRIM --- */
+    /* --- MODAL --- */
     .modal-scrim {
       position: fixed;
       inset: 0;
@@ -361,30 +253,12 @@
       box-shadow: var(--shadow-3);
       border: 1px solid var(--rule);
     }
-    .modal-close {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--fg-3);
-      font-size: 22px;
-      line-height: 1;
-      padding: 4px 8px;
-      border-radius: var(--r-2);
-      transition: color var(--dur-1);
-      flex-shrink: 0;
-    }
+    @media (max-width: 560px) { .modal { padding: var(--s-5); border-radius: var(--r-3); } }
+    .modal-close { background: none; border: none; cursor: pointer; color: var(--fg-3); font-size: 22px; line-height: 1; padding: 8px; border-radius: var(--r-2); transition: color var(--dur-1); flex-shrink: 0; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
     .modal-close:hover { color: var(--fg-1); }
 
     /* --- FORM --- */
-    .form-label {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--fg-3);
-      display: block;
-      margin-bottom: var(--s-2);
-    }
+    .form-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-3); display: block; margin-bottom: var(--s-2); }
     .form-input, .form-textarea {
       width: 100%;
       background: var(--surface);
@@ -403,71 +277,53 @@
     .form-textarea { resize: vertical; min-height: 130px; line-height: 1.65; }
     .form-group { margin-bottom: var(--s-5); }
 
-    /* Category selector */
-    .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--s-3);
-    }
-    .cat-btn {
-      padding: 13px 15px;
-      border: 1px solid var(--rule);
-      border-radius: var(--r-3);
-      background: var(--surface);
-      cursor: pointer;
-      text-align: left;
-      transition: border-color var(--dur-1) var(--ease-tide), background var(--dur-1) var(--ease-tide);
-    }
+    .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-3); }
+    @media (max-width: 440px) { .cat-grid { grid-template-columns: 1fr; } }
+    .cat-btn { padding: 13px 15px; border: 1px solid var(--rule); border-radius: var(--r-3); background: var(--surface); cursor: pointer; text-align: left; transition: border-color var(--dur-1) var(--ease-tide), background var(--dur-1) var(--ease-tide); min-height: 64px; }
     .cat-btn:hover { background: var(--surface-2); border-color: var(--rule-2); }
     .cat-btn.selected { background: var(--surface-2); }
-    .cat-btn-name {
-      font-family: var(--sans);
-      font-size: 14px;
-      font-weight: 500;
-      display: block;
-      margin-bottom: 3px;
-    }
-    .cat-btn-hint {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--fg-4);
-      display: block;
-    }
+    .cat-btn-name { font-family: var(--sans); font-size: 14px; font-weight: 500; display: block; margin-bottom: 3px; }
+    .cat-btn-hint { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-4); display: block; }
 
-    /* --- EMPTY STATE --- */
-    .empty-state {
-      text-align: center;
-      padding: 80px 0 100px;
-    }
+    /* --- EMPTY / LOADING STATES --- */
+    .empty-state { text-align: center; padding: 80px 0 100px; }
+    .loading-state { text-align: center; padding: 80px 0; font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--fg-4); }
 
     /* --- FOOTER --- */
-    .footer {
-      border-top: 1px solid var(--rule);
-      padding: var(--s-6) var(--gutter);
-      text-align: center;
-    }
+    .footer { border-top: 1px solid var(--rule); padding: var(--s-6) var(--gutter); text-align: center; }
 
-    /* --- DETAIL BODY --- */
-    .detail-body {
-      font-size: 1.0625rem;
-      line-height: 1.72;
-      color: var(--fg-2);
-      white-space: pre-wrap;
-      font-family: var(--sans);
-    }
+    /* --- DETAIL --- */
+    .detail-body { font-size: 1.0625rem; line-height: 1.72; color: var(--fg-2); white-space: pre-wrap; font-family: var(--sans); }
+    .detail-actions { display: flex; align-items: center; justify-content: space-between; padding-top: 20px; border-top: 1px solid var(--rule); flex-wrap: wrap; gap: 10px; }
+    .detail-img { width: 100%; border-radius: var(--r-3); margin-bottom: 24px; object-fit: cover; max-height: 300px; display: block; }
   </style>
 </head>
 <body>
   <div id="root"></div>
 
+  <!-- Supabase JS client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NLp9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
+
+    // ---- Supabase -------------------------------------------------------
+    // Fill these in after creating your Supabase project:
+    const SUPABASE_URL      = 'https://gwfnmjrxbhmzpcdreqwk.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_ie_KL6sJxWVwrnOPbvIrSQ_voLVlLdO';
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function fetchEntries() {
+      const { data, error } = await db
+        .from('entries')
+        .select('*')
+        .order('date', { ascending: false });
+      if (error) console.error('Supabase fetch:', error.message);
+      return data || [];
+    }
 
     // ---- Categories -------------------------------------------------------
     const CATS = {
@@ -505,41 +361,23 @@
       },
     };
 
-    const STORAGE_KEY = 'ftloc-notebook-v1';
-
-    function loadEntries() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-      catch { return []; }
-    }
-
-    // ---- Fishbone brand mark ----------------------------------------------
+    // ---- Fishbone brand mark --------------------------------------------
     function FishboneMark({ size = 28 }) {
       const scale = size / 20;
       return (
-        <svg
-          width={Math.round(32 * scale)}
-          height={Math.round(20 * scale)}
-          viewBox="0 0 32 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          {/* Tail */}
+        <svg width={Math.round(32 * scale)} height={Math.round(20 * scale)} viewBox="0 0 32 20" fill="none" aria-hidden="true">
           <path d="M 3 5 L 8 10 L 3 15" stroke="#8aa4ae" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          {/* Body */}
           <line x1="8" y1="10" x2="27" y2="10" stroke="#8aa4ae" strokeWidth="1.6" strokeLinecap="round"/>
-          {/* Spines */}
           <line x1="12" y1="6.5" x2="12" y2="13.5" stroke="#8aa4ae" strokeWidth="1.3" strokeLinecap="round"/>
           <line x1="16" y1="6.5" x2="16" y2="13.5" stroke="#8aa4ae" strokeWidth="1.3" strokeLinecap="round"/>
           <line x1="20" y1="6.5" x2="20" y2="13.5" stroke="#8aa4ae" strokeWidth="1.3" strokeLinecap="round"/>
           <line x1="24" y1="6.5" x2="24" y2="13.5" stroke="#8aa4ae" strokeWidth="1.3" strokeLinecap="round"/>
-          {/* Eye */}
           <circle cx="27" cy="10" r="2.6" fill="#ee9b00"/>
         </svg>
       );
     }
 
-    // ---- Category pill ----------------------------------------------------
+    // ---- Category pill --------------------------------------------------
     function CategoryPill({ catKey }) {
       const cat = CATS[catKey];
       if (!cat) return null;
@@ -551,7 +389,7 @@
       );
     }
 
-    // ---- Nav --------------------------------------------------------------
+    // ---- Nav ------------------------------------------------------------
     function Nav({ onAdd }) {
       return (
         <nav className="nav">
@@ -563,11 +401,7 @@
                 <span className="nav-sub">Marine biology notebook</span>
               </div>
             </div>
-            <button
-              className="btn btn-primary"
-              style={{ padding: '9px 16px', fontSize: 13 }}
-              onClick={onAdd}
-            >
+            <button className="btn btn-primary" style={{ padding: '9px 16px', fontSize: 13 }} onClick={onAdd}>
               + New entry
             </button>
           </div>
@@ -575,80 +409,52 @@
       );
     }
 
-    // ---- Hero -------------------------------------------------------------
-    function Hero({ count, onAdd }) {
+    // ---- Hero -----------------------------------------------------------
+    function Hero({ count, loading, onAdd }) {
       const plural = count === 1 ? 'entry' : 'entries';
       return (
         <section className="hero">
-          <div
-            className="hero-bg"
-            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=2000&q=80)' }}
-          ></div>
+          <div className="hero-bg" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=2000&q=80)' }}></div>
           <div className="hero-overlay"></div>
-
           <div className="hero-content container">
             <div className="eyebrow" style={{ color: 'var(--sun)', marginBottom: 16 }}>
               Field notebook · Marine biology
             </div>
-            <h1 style={{
-              fontFamily: 'var(--serif)',
-              fontSize: 'clamp(2rem, 4.8vw, 3.8rem)',
-              fontWeight: 500,
-              fontStyle: 'italic',
-              lineHeight: 1.02,
-              letterSpacing: '-0.018em',
-              color: 'var(--fg-1)',
-              margin: '0 0 22px',
-              maxWidth: '20ch',
-            }}>
+            <h1 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(2rem, 4.8vw, 3.8rem)', fontWeight: 500, fontStyle: 'italic', lineHeight: 1.02, letterSpacing: '-0.018em', color: 'var(--fg-1)', margin: '0 0 22px', maxWidth: '20ch' }}>
               My marine biology notebook.
             </h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-              <button className="btn btn-primary" onClick={onAdd}>
-                Add an idea →
-              </button>
-              <span style={{
-                fontFamily: 'var(--mono)',
-                fontSize: 11,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: 'var(--fg-4)',
-              }}>
-                {count === 0 ? 'No entries yet — start here' : `${count} ${plural} recorded`}
+              <button className="btn btn-primary" onClick={onAdd}>Add an idea →</button>
+              <span style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-4)' }}>
+                {loading ? 'Loading…' : count === 0 ? 'No entries yet — start here' : `${count} ${plural} recorded`}
               </span>
             </div>
           </div>
-
-          <div className="hero-annotation">
-            the ocean is full<br/>of wonders
-          </div>
+          <div className="hero-annotation">the ocean is full<br/>of wonders</div>
         </section>
       );
     }
 
-    // ---- Entry card -------------------------------------------------------
+    // ---- Entry card -----------------------------------------------------
     function EntryCard({ entry, onClick }) {
       const cat = CATS[entry.category];
-      const dateStr = new Date(entry.date).toLocaleDateString('en-GB', {
-        day: 'numeric', month: 'short',
-      });
+      const dateStr = new Date(entry.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+      const imgSrc = entry.image_url || (cat && cat.img);
       return (
         <div className="entry-card" onClick={onClick}>
           <div className="entry-card-header">
-            <div
-              className="card-img-inner"
-              style={{ backgroundImage: `url(${cat.img})` }}
-            ></div>
+            {imgSrc && <div className="card-img-inner" style={{ backgroundImage: `url(${imgSrc})` }}></div>}
             <div className="entry-card-header-overlay"></div>
             <div style={{ position: 'absolute', top: 12, left: 12 }}>
               <CategoryPill catKey={entry.category} />
             </div>
+            {entry.source === 'curated' && (
+              <div className="curated-badge">from Dad</div>
+            )}
           </div>
           <div className="entry-card-body">
             <div className="entry-card-title">{entry.title}</div>
-            {entry.body && (
-              <div className="entry-card-text">{entry.body}</div>
-            )}
+            {entry.body && <div className="entry-card-text">{entry.body}</div>}
             <div className="entry-card-footer">
               <span className="field-label">{dateStr}</span>
               <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--fg-4)' }}>Read →</span>
@@ -658,117 +464,53 @@
       );
     }
 
-    // ---- Entry detail modal -----------------------------------------------
-    function EntryDetail({ entry, onClose, onDelete }) {
-      const cat = CATS[entry.category];
-      const dateStr = new Date(entry.date).toLocaleDateString('en-GB', {
-        day: 'numeric', month: 'long', year: 'numeric',
-      });
-
-      function handleScrimClick(e) {
-        if (e.target === e.currentTarget) onClose();
-      }
-
-      return (
-        <div className="modal-scrim" onClick={handleScrimClick}>
-          <div className="modal" style={{ maxWidth: 640 }}>
-            <div style={{ marginBottom: 20 }}>
-              <CategoryPill catKey={entry.category} />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 22 }}>
-              <h2 style={{
-                fontFamily: 'var(--serif)',
-                fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                fontWeight: 500,
-                fontStyle: 'italic',
-                lineHeight: 1.1,
-                color: 'var(--fg-1)',
-                margin: 0,
-              }}>
-                {entry.title}
-              </h2>
-              <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
-            </div>
-
-            {entry.body ? (
-              <p className="detail-body" style={{ marginBottom: 28 }}>{entry.body}</p>
-            ) : (
-              <p style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--fg-4)', marginBottom: 28 }}>
-                No notes added yet.
-              </p>
-            )}
-
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingTop: 20,
-              borderTop: '1px solid var(--rule)',
-            }}>
-              <span className="field-label">{dateStr}</span>
-              <button
-                className="btn"
-                style={{ background: 'rgba(174,32,18,0.14)', color: 'var(--kelp)', fontSize: 13, padding: '8px 14px' }}
-                onClick={() => { onDelete(entry.id); onClose(); }}
-              >
-                Delete entry
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // ---- Entry form modal -------------------------------------------------
-    function EntryForm({ onSave, onClose }) {
-      const [category, setCategory] = useState('animal');
-      const [title, setTitle] = useState('');
-      const [body, setBody] = useState('');
+    // ---- Entry form (create + edit) ------------------------------------
+    function EntryForm({ onSave, onClose, initialEntry = null }) {
+      const isEdit = !!initialEntry;
+      const [category, setCategory] = useState(initialEntry?.category || 'animal');
+      const [title, setTitle] = useState(initialEntry?.title || '');
+      const [body, setBody] = useState(initialEntry?.body || '');
+      const [imageUrl, setImageUrl] = useState(initialEntry?.image_url || '');
+      const [saving, setSaving] = useState(false);
       const titleRef = useRef(null);
 
       useEffect(() => {
-        // Small delay so the modal animation settles first
         const t = setTimeout(() => titleRef.current?.focus(), 60);
         return () => clearTimeout(t);
       }, []);
 
-      function handleSubmit(e) {
+      async function handleSubmit(e) {
         e.preventDefault();
-        if (!title.trim()) return;
-        onSave({
-          id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-          category,
-          title: title.trim(),
-          body: body.trim(),
-          date: new Date().toISOString(),
-        });
-      }
-
-      function handleScrimClick(e) {
-        if (e.target === e.currentTarget) onClose();
+        if (!title.trim() || saving) return;
+        setSaving(true);
+        const payload = isEdit
+          ? { id: initialEntry.id, category, title: title.trim(), body: body.trim(), image_url: imageUrl.trim() || null }
+          : {
+              id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+              category,
+              title: title.trim(),
+              body: body.trim(),
+              image_url: imageUrl.trim() || null,
+              date: new Date().toISOString(),
+              source: 'personal',
+            };
+        await onSave(payload);
+        setSaving(false);
       }
 
       const cat = CATS[category];
 
       return (
-        <div className="modal-scrim" onClick={handleScrimClick}>
+        <div className="modal-scrim" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
           <div className="modal">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 26 }}>
-              <h2 style={{
-                fontFamily: 'var(--serif)',
-                fontSize: 26,
-                fontWeight: 500,
-                fontStyle: 'italic',
-                color: 'var(--fg-1)',
-                margin: 0,
-              }}>
-                New entry
+              <h2 style={{ fontFamily: 'var(--serif)', fontSize: 26, fontWeight: 500, fontStyle: 'italic', color: 'var(--fg-1)', margin: 0 }}>
+                {isEdit ? 'Edit entry' : 'New entry'}
               </h2>
               <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
             </div>
 
             <form onSubmit={handleSubmit}>
-              {/* Category selector */}
               <div className="form-group">
                 <label className="form-label">What kind of entry?</label>
                 <div className="cat-grid">
@@ -780,16 +522,13 @@
                       style={category === key ? { borderColor: c.color } : {}}
                       onClick={() => setCategory(key)}
                     >
-                      <span className="cat-btn-name" style={{ color: category === key ? c.color : 'var(--fg-1)' }}>
-                        {c.label}
-                      </span>
+                      <span className="cat-btn-name" style={{ color: category === key ? c.color : 'var(--fg-1)' }}>{c.label}</span>
                       <span className="cat-btn-hint">{c.hint}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Title */}
               <div className="form-group">
                 <label className="form-label" htmlFor="entry-title">Title</label>
                 <input
@@ -805,9 +544,10 @@
                 />
               </div>
 
-              {/* Notes */}
               <div className="form-group">
-                <label className="form-label" htmlFor="entry-body">Notes <span style={{ color: 'var(--fg-4)', textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
+                <label className="form-label" htmlFor="entry-body">
+                  Notes <span style={{ color: 'var(--fg-4)', textTransform: 'none', letterSpacing: 0 }}>(optional)</span>
+                </label>
                 <textarea
                   id="entry-body"
                   className="form-textarea"
@@ -817,22 +557,25 @@
                 ></textarea>
               </div>
 
+              <div className="form-group">
+                <label className="form-label" htmlFor="entry-img">
+                  Image URL <span style={{ color: 'var(--fg-4)', textTransform: 'none', letterSpacing: 0 }}>(optional — paste from Unsplash or Wikimedia)</span>
+                </label>
+                <input
+                  id="entry-img"
+                  className="form-input"
+                  type="url"
+                  placeholder="https://images.unsplash.com/…"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  autoComplete="off"
+                />
+              </div>
+
               <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  style={{ fontSize: 14, padding: '10px 18px' }}
-                  onClick={onClose}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  style={{ fontSize: 14, padding: '10px 20px' }}
-                  disabled={!title.trim()}
-                >
-                  Save entry
+                <button type="button" className="btn btn-secondary" style={{ fontSize: 14, padding: '12px 18px' }} onClick={onClose}>Cancel</button>
+                <button type="submit" className="btn btn-primary" style={{ fontSize: 14, padding: '12px 20px' }} disabled={!title.trim() || saving}>
+                  {saving ? 'Saving…' : isEdit ? 'Save changes' : 'Save entry'}
                 </button>
               </div>
             </form>
@@ -841,82 +584,148 @@
       );
     }
 
-    // ---- Empty state -------------------------------------------------------
-    function EmptyState({ onAdd }) {
+    // ---- Entry detail modal --------------------------------------------
+    function EntryDetail({ entry, onClose, onDelete, onEdit }) {
+      const dateStr = new Date(entry.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      const [deleting, setDeleting] = useState(false);
+
+      async function handleDelete() {
+        setDeleting(true);
+        await onDelete(entry.id);
+        onClose();
+      }
+
       return (
-        <div className="empty-state">
-          <FishboneMark size={52} />
-          <h2 style={{
-            fontFamily: 'var(--serif)',
-            fontStyle: 'italic',
-            fontSize: 30,
-            fontWeight: 400,
-            color: 'var(--fg-2)',
-            margin: '28px 0 14px',
-          }}>
-            Your notebook is waiting.
-          </h2>
-          <p style={{
-            color: 'var(--fg-3)',
-            fontSize: 16,
-            lineHeight: 1.6,
-            maxWidth: '44ch',
-            margin: '0 auto 32px',
-          }}>
-            Record an animal you've read about, a cool fact that surprised you, a question you want answered, or an idea you want to try.
-          </p>
-          <button className="btn btn-primary" onClick={onAdd}>
-            Add your first entry →
-          </button>
+        <div className="modal-scrim" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+          <div className="modal" style={{ maxWidth: 640 }}>
+            <div style={{ marginBottom: 20 }}>
+              <CategoryPill catKey={entry.category} />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 22 }}>
+              <h2 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 500, fontStyle: 'italic', lineHeight: 1.1, color: 'var(--fg-1)', margin: 0 }}>
+                {entry.title}
+              </h2>
+              <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
+            </div>
+
+            {entry.image_url && (
+              <img src={entry.image_url} alt="" className="detail-img" loading="lazy" />
+            )}
+
+            {entry.body ? (
+              <p className="detail-body" style={{ marginBottom: 28 }}>{entry.body}</p>
+            ) : (
+              <p style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', color: 'var(--fg-4)', marginBottom: 28 }}>No notes added yet.</p>
+            )}
+
+            <div className="detail-actions">
+              <span className="field-label">{dateStr}</span>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button
+                  className="btn btn-secondary"
+                  style={{ fontSize: 13, padding: '12px 16px' }}
+                  onClick={() => { onClose(); onEdit(entry); }}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn"
+                  style={{ background: 'rgba(174,32,18,0.14)', color: 'var(--kelp)', fontSize: 13, padding: '12px 16px' }}
+                  onClick={handleDelete}
+                  disabled={deleting}
+                >
+                  {deleting ? 'Deleting…' : 'Delete'}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       );
     }
 
-    // ---- App --------------------------------------------------------------
+    // ---- Empty state ----------------------------------------------------
+    function EmptyState({ onAdd }) {
+      return (
+        <div className="empty-state">
+          <FishboneMark size={52} />
+          <h2 style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 30, fontWeight: 400, color: 'var(--fg-2)', margin: '28px 0 14px' }}>
+            Your notebook is waiting.
+          </h2>
+          <p style={{ color: 'var(--fg-3)', fontSize: 16, lineHeight: 1.6, maxWidth: '44ch', margin: '0 auto 32px' }}>
+            Record an animal you've read about, a cool fact that surprised you, a question you want answered, or an idea you want to try.
+          </p>
+          <button className="btn btn-primary" onClick={onAdd}>Add your first entry →</button>
+        </div>
+      );
+    }
+
+    // ---- App ------------------------------------------------------------
     function App() {
-      const [entries, setEntries] = useState(loadEntries);
+      const [entries, setEntries] = useState([]);
+      const [loading, setLoading] = useState(true);
       const [formOpen, setFormOpen] = useState(false);
+      const [editingEntry, setEditingEntry] = useState(null);
       const [selectedId, setSelectedId] = useState(null);
       const [filterCat, setFilterCat] = useState(null);
 
-      useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-      }, [entries]);
+      function refresh() {
+        return fetchEntries().then(data => { setEntries(data); setLoading(false); });
+      }
 
-      function handleSave(entry) {
-        setEntries(prev => [entry, ...prev]);
+      useEffect(() => {
+        refresh();
+
+        // Real-time: re-fetch on any change from any device
+        const channel = db.channel('entries-rt')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'entries' }, () => {
+            fetchEntries().then(setEntries);
+          })
+          .subscribe();
+
+        // Re-fetch when tab comes back into view (handles tablet backgrounding)
+        const onVisibility = () => { if (!document.hidden) fetchEntries().then(setEntries); };
+        document.addEventListener('visibilitychange', onVisibility);
+
+        return () => {
+          db.removeChannel(channel);
+          document.removeEventListener('visibilitychange', onVisibility);
+        };
+      }, []);
+
+      async function handleSave(payload) {
+        const { data, error } = await db.from('entries').insert([payload]).select().single();
+        if (!error && data) setEntries(prev => [data, ...prev]);
         setFormOpen(false);
       }
 
-      function handleDelete(id) {
+      async function handleEdit(payload) {
+        const { id, ...changes } = payload;
+        const { data, error } = await db.from('entries').update(changes).eq('id', id).select().single();
+        if (!error && data) setEntries(prev => prev.map(e => e.id === id ? data : e));
+        setEditingEntry(null);
+      }
+
+      async function handleDelete(id) {
+        await db.from('entries').delete().eq('id', id);
         setEntries(prev => prev.filter(e => e.id !== id));
       }
 
-      const filtered = filterCat
-        ? entries.filter(e => e.category === filterCat)
-        : entries;
-
+      const filtered = filterCat ? entries.filter(e => e.category === filterCat) : entries;
       const selected = entries.find(e => e.id === selectedId) || null;
-
-      // Which categories actually have entries (for filter bar)
       const usedCats = Object.keys(CATS).filter(k => entries.some(e => e.category === k));
 
       return (
         <React.Fragment>
           <Nav onAdd={() => setFormOpen(true)} />
-          <Hero count={entries.length} onAdd={() => setFormOpen(true)} />
+          <Hero count={entries.length} loading={loading} onAdd={() => setFormOpen(true)} />
 
           <main className="main">
             <div className="container">
 
-              {/* Filter bar — only shown when there are entries */}
               {entries.length > 0 && (
                 <div className="filter-bar">
                   <span className="field-label" style={{ marginRight: 4 }}>Show</span>
-                  <button
-                    className={`btn btn-filter ${!filterCat ? 'active' : ''}`}
-                    onClick={() => setFilterCat(null)}
-                  >
+                  <button className={`btn btn-filter ${!filterCat ? 'active' : ''}`} onClick={() => setFilterCat(null)}>
                     All ({entries.length})
                   </button>
                   {usedCats.map(key => {
@@ -936,25 +745,18 @@
                 </div>
               )}
 
-              {/* Empty state */}
-              {entries.length === 0 && <EmptyState onAdd={() => setFormOpen(true)} />}
-
-              {/* No results for filter */}
-              {entries.length > 0 && filtered.length === 0 && (
+              {loading && <div className="loading-state">Loading notebook…</div>}
+              {!loading && entries.length === 0 && <EmptyState onAdd={() => setFormOpen(true)} />}
+              {!loading && entries.length > 0 && filtered.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: 'var(--serif)', fontSize: 20, fontStyle: 'italic', color: 'var(--fg-3)' }}>
                   Nothing in this category yet.
                 </div>
               )}
 
-              {/* Cards */}
               {filtered.length > 0 && (
                 <div className="cards-grid">
                   {filtered.map(entry => (
-                    <EntryCard
-                      key={entry.id}
-                      entry={entry}
-                      onClick={() => setSelectedId(entry.id)}
-                    />
+                    <EntryCard key={entry.id} entry={entry} onClick={() => setSelectedId(entry.id)} />
                   ))}
                 </div>
               )}
@@ -970,17 +772,14 @@
             </div>
           </footer>
 
-          {formOpen && (
-            <EntryForm
-              onSave={handleSave}
-              onClose={() => setFormOpen(false)}
-            />
-          )}
+          {formOpen && <EntryForm onSave={handleSave} onClose={() => setFormOpen(false)} />}
+          {editingEntry && <EntryForm initialEntry={editingEntry} onSave={handleEdit} onClose={() => setEditingEntry(null)} />}
           {selected && (
             <EntryDetail
               entry={selected}
               onClose={() => setSelectedId(null)}
               onDelete={handleDelete}
+              onEdit={(entry) => { setSelectedId(null); setEditingEntry(entry); }}
             />
           )}
         </React.Fragment>
