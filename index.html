@@ -525,7 +525,7 @@
     }
 
     // ---- Hero -----------------------------------------------------------
-    function Hero({ count, loading, onAdd }) {
+    function Hero({ count, loading, onAdd, user }) {
       const plural = count === 1 ? 'entry' : 'entries';
       return (
         <section className="hero">
@@ -539,9 +539,9 @@
               My marine biology notebook.
             </h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-              <button className="btn btn-primary" onClick={onAdd}>Add an idea →</button>
+              {user && <button className="btn btn-primary" onClick={onAdd}>Add an idea →</button>}
               <span style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-4)' }}>
-                {loading ? 'Loading…' : count === 0 ? 'No entries yet — start here' : `${count} ${plural} recorded`}
+                {loading ? 'Loading…' : count === 0 ? 'No entries yet' : `${count} ${plural} recorded`}
               </span>
             </div>
           </div>
@@ -761,7 +761,7 @@
     }
 
     // ---- Empty state ----------------------------------------------------
-    function EmptyState({ onAdd }) {
+    function EmptyState({ onAdd, user }) {
       return (
         <div className="empty-state">
           <FishboneMark size={52} />
@@ -771,7 +771,7 @@
           <p style={{ color: 'var(--fg-3)', fontSize: 16, lineHeight: 1.6, maxWidth: '44ch', margin: '0 auto 32px' }}>
             Record an animal you've read about, a cool fact that surprised you, a question you want answered, or an idea you want to try.
           </p>
-          <button className="btn btn-primary" onClick={onAdd}>Add your first entry →</button>
+          {user && <button className="btn btn-primary" onClick={onAdd}>Add your first entry →</button>}
         </div>
       );
     }
@@ -820,7 +820,7 @@
       }
 
       async function handleSave(payload) {
-        const { data, error } = await db.from('entries').insert([payload]).select().single();
+        const { data, error } = await db.from('entries').insert([{ ...payload, user_id: user?.id ?? null }]).select().single();
         if (!error && data) setEntries(prev => [data, ...prev]);
         setFormOpen(false);
       }
@@ -849,7 +849,7 @@
             onLogin={() => setLoginOpen(true)}
             onLogout={() => db.auth.signOut()}
           />
-          <Hero count={entries.length} loading={loading} onAdd={requestAdd} />
+          <Hero count={entries.length} loading={loading} onAdd={requestAdd} user={user} />
 
           <main className="main">
             <div className="container">
@@ -878,7 +878,7 @@
               )}
 
               {loading && <div className="loading-state">Loading notebook…</div>}
-              {!loading && entries.length === 0 && <EmptyState onAdd={requestAdd} />}
+              {!loading && entries.length === 0 && <EmptyState onAdd={requestAdd} user={user} />}
               {!loading && entries.length > 0 && filtered.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: 'var(--serif)', fontSize: 20, fontStyle: 'italic', color: 'var(--fg-3)' }}>
                   Nothing in this category yet.
