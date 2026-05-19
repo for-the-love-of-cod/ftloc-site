@@ -702,11 +702,21 @@
         let finalImageUrl = imageUrl.trim() || null;
         if (imageFile) {
           try {
-            const blob = await resizeImage(imageFile);
-            const path = `${user?.id ?? 'anon'}/${Date.now()}-${crypto.randomUUID()}.jpg`;
+            let blob, ext, contentType;
+            try {
+              blob = await resizeImage(imageFile);
+              ext = 'jpg';
+              contentType = 'image/jpeg';
+            } catch (decodeErr) {
+              console.warn('Resize skipped, uploading original:', decodeErr);
+              blob = imageFile;
+              contentType = imageFile.type || 'application/octet-stream';
+              ext = (imageFile.name.match(/\.([a-z0-9]+)$/i)?.[1] || 'bin').toLowerCase();
+            }
+            const path = `${user?.id ?? 'anon'}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
             const { error: upErr } = await db.storage
               .from('entry-images')
-              .upload(path, blob, { contentType: 'image/jpeg' });
+              .upload(path, blob, { contentType });
             if (upErr) throw upErr;
             const { data: pub } = db.storage.from('entry-images').getPublicUrl(path);
             finalImageUrl = pub.publicUrl;
