@@ -609,22 +609,47 @@
     }
 
     // ---- Image resize helper -------------------------------------------
+    async function decodeImage(file) {
+      // Prefer createImageBitmap (fast, handles EXIF orientation). If the
+      // browser rejects the file — common on very large phone JPEGs — fall
+      // back to an <img> element, whose decode pipeline is more lenient.
+      try {
+        const bitmap = await createImageBitmap(file);
+        return { source: bitmap, w: bitmap.width, h: bitmap.height, cleanup: () => bitmap.close?.() };
+      } catch (_) {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.src = url;
+        try {
+          await img.decode();
+        } catch (e) {
+          URL.revokeObjectURL(url);
+          throw new Error('This image couldn’t be read. Try a JPEG or PNG saved from your phone’s gallery.');
+        }
+        return { source: img, w: img.naturalWidth, h: img.naturalHeight, cleanup: () => URL.revokeObjectURL(url) };
+      }
+    }
+
     async function resizeImage(file, maxEdge = 1600, quality = 0.85) {
-      const bitmap = await createImageBitmap(file);
-      const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
-      const w = Math.round(bitmap.width * scale);
-      const h = Math.round(bitmap.height * scale);
-      const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
-      canvas.getContext('2d').drawImage(bitmap, 0, 0, w, h);
-      return new Promise((resolve, reject) => {
-        canvas.toBlob(
-          (blob) => (blob ? resolve(blob) : reject(new Error('Could not encode image'))),
-          'image/jpeg',
-          quality,
-        );
-      });
+      const { source, w: sw, h: sh, cleanup } = await decodeImage(file);
+      try {
+        const scale = Math.min(1, maxEdge / Math.max(sw, sh));
+        const w = Math.round(sw * scale);
+        const h = Math.round(sh * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(source, 0, 0, w, h);
+        return await new Promise((resolve, reject) => {
+          canvas.toBlob(
+            (blob) => (blob ? resolve(blob) : reject(new Error('Could not encode image'))),
+            'image/jpeg',
+            quality,
+          );
+        });
+      } finally {
+        cleanup();
+      }
     }
 
     // ---- Entry form (create + edit) ------------------------------------
@@ -702,21 +727,11 @@
         let finalImageUrl = imageUrl.trim() || null;
         if (imageFile) {
           try {
-            let blob, ext, contentType;
-            try {
-              blob = await resizeImage(imageFile);
-              ext = 'jpg';
-              contentType = 'image/jpeg';
-            } catch (decodeErr) {
-              console.warn('Resize skipped, uploading original:', decodeErr);
-              blob = imageFile;
-              contentType = imageFile.type || 'application/octet-stream';
-              ext = (imageFile.name.match(/\.([a-z0-9]+)$/i)?.[1] || 'bin').toLowerCase();
-            }
-            const path = `${user?.id ?? 'anon'}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
+            const blob = await resizeImage(imageFile);
+            const path = `${user?.id ?? 'anon'}/${Date.now()}-${crypto.randomUUID()}.jpg`;
             const { error: upErr } = await db.storage
               .from('entry-images')
-              .upload(path, blob, { contentType });
+              .upload(path, blob, { contentType: 'image/jpeg' });
             if (upErr) throw upErr;
             const { data: pub } = db.storage.from('entry-images').getPublicUrl(path);
             finalImageUrl = pub.publicUrl;
